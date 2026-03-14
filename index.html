@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAAL SATSANG, ZONE-II</title>
+    <style>
+        /* The header color is set to perfectly match the dark red from your uploaded logo */
+        :root {
+            --rssb-red: #8B0B0B;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            transition: all 0.3s ease;
+        }
+
+        /* Logic for Webpage (Default) View */
+        .desktop-view {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        /* Logic for Mobile View */
+        /* When 'MOBILE' is selected, this class restricts the maximum width to 480px and centers the screen, forcing a mobile layout on any device */
+        .mobile-view {
+            max-width: 480px;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            min-height: 100vh;
+            background-color: white;
+        }
+
+        header {
+            background-color: var(--rssb-red);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+
+        .controls-container {
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        select {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body id="mainContainer" class="desktop-view">
+
+    <header>
+        <h1>BAAL SATSANG, ZONE-II</h1>
+        <h2>INFORMATION AND DATA HANDLING PORTAL</h2>
+    </header>
+
+    <div class="controls-container">
+        
+        <div class="form-group">
+            <label for="viewSelect">VIEW</label>
+            <select id="viewSelect" onchange="toggleView()">
+                <option value="webpage">WEBPAGE (DEFAULT)</option>
+                <option value="mobile">MOBILE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="optionSelect">OPTION</label>
+            <select id="optionSelect">
+                <option value="">-- Select Role --</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="ZS">ZS</option>
+                <option value="SSO">SSO</option>
+                <option value="AIBS">AIBS</option>
+                <option value="ABSST">ABSST</option>
+                <option value="ABSKCO">ABSKCO</option>
+                <option value="BSK">BSK</option>
+                <option value="CSUP">CSUP</option>
+                <option value="BPCO">BPCO</option>
+            </select>
+        </div>
+
+    </div>
+
+    <script>
+        // Exactly as requested: This logic listens to the VIEW dropdown. 
+        // If "MOBILE" is selected, it applies the 'mobile-view' CSS class which shrinks the container to mobile size. 
+        // Otherwise, it stays in the default 'desktop-view'.
+        function toggleView() {
+            var selectedView = document.getElementById("viewSelect").value;
+            var container = document.getElementById("mainContainer");
+            
+            if (selectedView === "mobile") {
+                container.className = "mobile-view";
+            } else {
+                container.className = "desktop-view";
+            }
+        }
+    </script>
+
+</body>
+</html>
