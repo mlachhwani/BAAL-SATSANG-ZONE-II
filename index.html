@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BAAL SATSANG, ZONE-II</title>
     <style>
-        /* The header color is set to perfectly match the dark red from your uploaded logo */
         :root {
             --rssb-red: #8B0B0B;
         }
-        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -17,15 +15,10 @@
             background-color: #f4f4f4;
             transition: all 0.3s ease;
         }
-
-        /* Logic for Webpage (Default) View */
         .desktop-view {
             width: 100%;
             max-width: 100%;
         }
-
-        /* Logic for Mobile View */
-        /* When 'MOBILE' is selected, this class restricts the maximum width to 480px and centers the screen, forcing a mobile layout on any device */
         .mobile-view {
             max-width: 480px;
             margin: 0 auto;
@@ -33,56 +26,61 @@
             min-height: 100vh;
             background-color: white;
         }
-
         header {
             background-color: var(--rssb-red);
             color: white;
             text-align: center;
             padding: 20px;
         }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 1px;
-        }
-
-        h2 {
-            margin: 10px 0 0 0;
-            font-size: 14px;
-            font-weight: normal;
-            letter-spacing: 0.5px;
-        }
-
-        .controls-container {
-            padding: 30px 20px;
+        h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
+        h2 { margin: 10px 0 0 0; font-size: 14px; font-weight: normal; letter-spacing: 0.5px; }
+        
+        .controls-container, .hierarchy-container, .forms-container {
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
-
         .form-group {
             display: flex;
             flex-direction: column;
-            width: 300px;
-            max-width: 100%;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 10px;
         }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #333;
-        }
-
-        select {
-            padding: 12px;
-            font-size: 16px;
+        label { font-weight: bold; margin-bottom: 5px; color: #333; }
+        select, input[type="password"], input[type="text"], input[type="date"], input[type="number"], input[type="file"], textarea {
+            padding: 10px;
+            font-size: 14px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            background-color: #fff;
-            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
         }
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--rssb-red);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .hidden { display: none !important; }
+
+        .form-box { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; max-width: 800px; margin-bottom: 30px; }
+        .form-box h3 { text-align: center; color: #333; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .section-title { background-color: #0056b3; color: #fff; padding: 10px; border-radius: 4px; margin-top: 20px; margin-bottom: 15px; font-weight: bold; }
+        .question-block { margin-bottom: 20px; padding: 10px; border: 1px solid #eee; border-radius: 4px; background-color: #fafafa; }
+        .question-text { font-weight: bold; margin-bottom: 10px; font-size: 0.95em; }
+        .options label { margin-right: 15px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 8px; text-align: left; }
     </style>
 </head>
 <body id="mainContainer" class="desktop-view">
@@ -92,10 +90,9 @@
         <h2>INFORMATION AND DATA HANDLING PORTAL</h2>
     </header>
 
-    <div class="controls-container">
-        
+    <div class="controls-container" id="loginSection">
         <div class="form-group">
-            <label for="viewSelect">VIEW</label>
+            <label>VIEW</label>
             <select id="viewSelect" onchange="toggleView()">
                 <option value="webpage">WEBPAGE (DEFAULT)</option>
                 <option value="mobile">MOBILE</option>
@@ -103,8 +100,8 @@
         </div>
 
         <div class="form-group">
-            <label for="optionSelect">OPTION</label>
-            <select id="optionSelect">
+            <label>OPTION (ROLE)</label>
+            <select id="roleSelect" onchange="checkRole()">
                 <option value="">-- Select Role --</option>
                 <option value="ADMIN">ADMIN</option>
                 <option value="ZS">ZS</option>
@@ -118,23 +115,529 @@
             </select>
         </div>
 
+        <div class="form-group hidden" id="passwordGroup">
+            <label>PASSWORD</label>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+        </div>
+
+        <button class="btn" style="width: auto;" onclick="login()">LOGIN</button>
+    </div>
+
+    <div class="hierarchy-container hidden" id="hierarchySection">
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>STATE</label>
+                <select id="stateSelect">
+                    <option value="">-- Select State --</option>
+                    <option value="MP">Madhya Pradesh (MP)</option>
+                    <option value="CG">Chhattisgarh (CG)</option>
+                    <option value="RJ">Rajasthan (RJ)</option>
+                    <option value="OD">Odisha (OD)</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>AREA</label>
+                <select id="areaSelect">
+                    <option value="">-- Select Area --</option>
+                    <option value="KOTA">KOTA</option> 
+                </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>CENTRE</label>
+                <select id="centreSelect">
+                    <option value="">-- Select Centre --</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="forms-container hidden" id="formsSection">
+        
+        <div class="form-box hidden" id="sci2FormContainer">
+            <h3>Satsang Centres in India<br>Bio Data for Appointment of Functionaries</h3>
+            <form id="sci2Form">
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;"><label>Beas File No.</label><input type="text" name="beasFileNo"></div>
+                    <div class="form-group" style="flex:1;"><label>No.</label><input type="text" name="formNo"></div>
+                    <div class="form-group" style="flex:1;"><label>Date</label><input type="date" name="headerDate"></div>
+                    <div class="form-group" style="flex:1;"><label>Photograph</label><input type="file" name="photograph" accept="image/*"></div>
+                </div>
+
+                <div class="section-title">Location Details</div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;"><label>Name of Satsang Place</label><input type="text" name="satsangPlace"></div>
+                    <div class="form-group" style="flex:1;"><label>Attached to (C/SC/SP)</label><input type="text" name="attachedTo"></div>
+                    <div class="form-group" style="flex:1;"><label>Area</label><input type="text" name="area"></div>
+                </div>
+
+                <div class="section-title">Personal Details</div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;">
+                        <label>Title</label>
+                        <select name="title">
+                            <option value="Mr.">Mr.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="Ms.">Ms.</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:2;"><label>First Name</label><input type="text" name="firstName"></div>
+                    <div class="form-group" style="flex:2;"><label>Last Name</label><input type="text" name="lastName"></div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group" style="flex:2;"><label>Date of birth</label><input type="date" name="dob"></div>
+                    <div class="form-group" style="flex:1;"><label>Age</label><input type="number" name="age"></div>
+                    <div class="form-group" style="flex:3;"><label>Father's / Husband's name</label><input type="text" name="fatherHusbandName"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:100%;"><label>Address</label><textarea name="address" rows="2"></textarea></div>
+                    <div class="form-group" style="flex:1;"><label>PIN</label><input type="text" name="pin"></div>
+                    <div class="form-group" style="flex:2;"><label>Telephone No.</label><input type="text" name="telephoneNo"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;"><label>Date of Initiation (Naam Daan)</label><input type="date" name="initiationDate"></div>
+                    <div class="form-group" style="flex:1;"><label>Place of Initiation</label><input type="text" name="initiationPlace"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:100%;"><label>Educational Qualifications</label><input type="text" name="education"></div>
+                    <div class="form-group" style="flex:100%;"><label>Profession / occupation</label><input type="text" name="profession"></div>
+                    <div class="form-group" style="flex:1;"><label>Annual Income</label><input type="text" name="annualIncome"></div>
+                    <div class="form-group" style="flex:1;"><label>Approximate time available for sewa daily</label><input type="text" name="timeAvailable"></div>
+                    <div class="form-group" style="flex:100%;"><label>Conveyance held</label><input type="text" name="conveyance"></div>
+                </div>
+
+                <div class="section-title">Sewa Details</div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:100%;">
+                        <label>11. Are you doing sewa in Beas?</label>
+                        <div class="options">
+                            <label><input type="radio" name="sewaBeas" value="Yes"> Yes</label>
+                            <label><input type="radio" name="sewaBeas" value="No"> No</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex:1;"><label>If so, state Department</label><input type="text" name="beasDepartment"></div>
+                    <div class="form-group" style="flex:1;"><label>Period From</label><input type="date" name="beasPeriodFrom"></div>
+                    <div class="form-group" style="flex:1;"><label>Period To</label><input type="date" name="beasPeriodTo"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:100%;">
+                        <label>12. Are you doing sewa at Centre?</label>
+                        <div class="options">
+                            <label><input type="radio" name="sewaCentre" value="Yes"> Yes</label>
+                            <label><input type="radio" name="sewaCentre" value="No"> No</label>
+                        </div>
+                    </div>
+                    <div class="form-group" style="flex:2;"><label>If so, state Kind of Sewa</label><input type="text" name="centreKindSewa"></div>
+                    <div class="form-group" style="flex:1;"><label>Since When</label><input type="text" name="centreSinceWhen"></div>
+                </div>
+
+                <div class="section-title">13. Details of Children</div>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Age</th><th>Married / Settled</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="child1Name"></td>
+                            <td><input type="number" name="child1Age"></td>
+                            <td><input type="text" name="child1Status"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="child2Name"></td>
+                            <td><input type="number" name="child2Age"></td>
+                            <td><input type="text" name="child2Status"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" name="child3Name"></td>
+                            <td><input type="number" name="child3Age"></td>
+                            <td><input type="text" name="child3Status"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="form-group" style="flex:100%;"><label>14. Any other details</label><textarea name="otherDetails" rows="3"></textarea></div>
+
+                <div class="section-title">TO BE FILLED IF RECOMMENDED FOR SEWA OF AREA SECRETARY</div>
+                <div class="form-group" style="flex:100%;">
+                    <label>1. Relatives doing sewa in the Area</label>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><input type="text" name="relAreaName" placeholder="Name"></div>
+                        <div class="form-group" style="flex:1;"><input type="text" name="relAreaPlace" placeholder="Place"></div>
+                        <div class="form-group" style="flex:1;"><input type="text" name="relAreaNature" placeholder="Nature"></div>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:100%;">
+                    <label>2. Relatives doing sewa outside the Area</label>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;"><input type="text" name="relOutAreaName" placeholder="Name"></div>
+                        <div class="form-group" style="flex:1;"><input type="text" name="relOutAreaPlace" placeholder="Place"></div>
+                        <div class="form-group" style="flex:1;"><input type="text" name="relOutAreaNature" placeholder="Nature"></div>
+                    </div>
+                </div>
+                <div class="form-group" style="flex:100%;">
+                    <label>3. Recommendation in brief</label>
+                    <textarea name="recommendationBrief" rows="3"></textarea>
+                </div>
+
+                <button type="button" class="btn" style="background-color: #28a745;" onclick="submitSci2Form()">Submit SCI-2 Form</button>
+            </form>
+        </div>
+
+        <div class="form-box hidden" id="scriptApprovalContainer">
+            <h3>Checklist for Baal Satsang Script Approval</h3>
+            <form id="checklistForm">
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;"><label>Date Received</label><input type="date" name="dateReceived"></div>
+                    <div class="form-group" style="flex:1;"><label>Date Sent</label><input type="date" name="dateSent"></div>
+                    <div class="form-group" style="flex:1;"><label>Received from Reviewer</label><input type="date" name="dateReviewer"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;"><label>Script Title</label><input type="text" name="scriptTitle"></div>
+                    <div class="form-group" style="flex:1;"><label>Name of Reviewer</label><input type="text" name="reviewerName"></div>
+                    <div class="form-group" style="flex:1;"><label>Name of Karta</label><input type="text" name="kartaName"></div>
+                </div>
+
+                <div class="section-title">1. सत्संग अवधि (Duration)</div>
+                <div class="question-block">
+                    <div class="question-text">A. सत्संग की अवधि 30 से 35 मिनट के बीच पाई गई।</div>
+                    <div class="options">
+                        <label><input type="radio" name="q1A" value="Yes"> हां / Yes</label>
+                        <label><input type="radio" name="q1A" value="No"> नहीं / No</label>
+                    </div>
+                    <input type="text" name="desc1A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. स्क्रिप्ट के प्रत्येक भाग की समय-सीमा अलग-अलग रूप से अंकित होनी चाहिए।</div>
+                    <div class="options">
+                        <label><input type="radio" name="q1B" value="Yes"> हां / Yes</label>
+                        <label><input type="radio" name="q1B" value="No"> नहीं / No</label>
+                    </div>
+                    <input type="text" name="desc1B" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">2. परिचय (Introduction)</div>
+                <div class="question-block">
+                    <div class="question-text">A. यह बच्चों के लिए रोचक पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q2A" value="Yes"> हां / Yes</label><label><input type="radio" name="q2A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc2A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. यह सत्संग विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q2B" value="Yes"> हां / Yes</label><label><input type="radio" name="q2B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc2B" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">3. कहानी (Story) - 01</div>
+                <div class="question-block">
+                    <div class="question-text">A. यह बच्चों के लिए रोचक पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q3A" value="Yes"> हां / Yes</label><label><input type="radio" name="q3A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. यह सत्संग विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q3B" value="Yes"> हां / Yes</label><label><input type="radio" name="q3B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. नैतिक/ज्ञान का विवरण स्पष्ट रूप से साफ़-साफ़ समझाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q3C" value="Yes"> हां / Yes</label><label><input type="radio" name="q3C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. हर 3-4 मिनट के अंतराल पर संगत से बातचीत (interaction) पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q3D" value="Yes"> हां / Yes</label><label><input type="radio" name="q3D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3D" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">E. संगत से बातचीत (interaction) वस्तुनिष्ठ थी, वर्णनात्मक नहीं।</div>
+                    <div class="options"><label><input type="radio" name="q3E" value="Yes"> हां / Yes</label><label><input type="radio" name="q3E" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3E" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">F. पंच लाइन की उपलब्धता और इसे स्क्रिप्ट विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q3F" value="Yes"> हां / Yes</label><label><input type="radio" name="q3F" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc3F" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">4. कहानी (Story) - 02</div>
+                <div class="question-block">
+                    <div class="question-text">A. यह बच्चों के लिए रोचक पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q4A" value="Yes"> हां / Yes</label><label><input type="radio" name="q4A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. यह सत्संग विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q4B" value="Yes"> हां / Yes</label><label><input type="radio" name="q4B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. नैतिक/ज्ञान का विवरण स्पष्ट रूप से साफ़-साफ़ समझाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q4C" value="Yes"> हां / Yes</label><label><input type="radio" name="q4C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. हर 3-4 मिनट के अंतराल पर संगत से बातचीत (interaction) पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q4D" value="Yes"> हां / Yes</label><label><input type="radio" name="q4D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4D" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">E. संगत से बातचीत (interaction) वस्तुनिष्ठ थी, वर्णनात्मक नहीं।</div>
+                    <div class="options"><label><input type="radio" name="q4E" value="Yes"> हां / Yes</label><label><input type="radio" name="q4E" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4E" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">F. पंच लाइन की उपलब्धता और इसे स्क्रिप्ट विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q4F" value="Yes"> हां / Yes</label><label><input type="radio" name="q4F" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc4F" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">5. कहानी (Story) - 03</div>
+                <div class="question-block">
+                    <div class="question-text">A. यह बच्चों के लिए रोचक पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q5A" value="Yes"> हां / Yes</label><label><input type="radio" name="q5A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. यह सत्संग विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q5B" value="Yes"> हां / Yes</label><label><input type="radio" name="q5B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. नैतिक/ज्ञान का विवरण स्पष्ट रूप से साफ़-साफ़ समझाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q5C" value="Yes"> हां / Yes</label><label><input type="radio" name="q5C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. हर 3-4 मिनट के अंतराल पर संगत से बातचीत (interaction) पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q5D" value="Yes"> हां / Yes</label><label><input type="radio" name="q5D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5D" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">E. संगत से बातचीत (interaction) वस्तुनिष्ठ थी, वर्णनात्मक नहीं।</div>
+                    <div class="options"><label><input type="radio" name="q5E" value="Yes"> हां / Yes</label><label><input type="radio" name="q5E" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5E" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">F. पंच लाइन की उपलब्धता और इसे स्क्रिप्ट विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q5F" value="Yes"> हां / Yes</label><label><input type="radio" name="q5F" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc5F" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">6. फिलर/उपाख्यान या प्रसंग (Filler/Anecdote)</div>
+                <div class="question-block">
+                    <div class="question-text">A. यह बच्चों के लिए रोचक पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q6A" value="Yes"> हां / Yes</label><label><input type="radio" name="q6A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc6A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. यह सत्संग विषय से संबंधित पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q6B" value="Yes"> हां / Yes</label><label><input type="radio" name="q6B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc6B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. नैतिक/ज्ञान का विवरण स्पष्ट रूप से साफ़-साफ़ समझाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q6C" value="Yes"> हां / Yes</label><label><input type="radio" name="q6C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc6C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. हर 3-4 मिनट के अंतराल पर संगत से बातचीत (interaction) पाया गया।</div>
+                    <div class="options"><label><input type="radio" name="q6D" value="Yes"> हां / Yes</label><label><input type="radio" name="q6D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc6D" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">7. समापन (Conclusion)</div>
+                <div class="question-block">
+                    <div class="question-text">A. सत्संग का समापन अचानक या केवल कहानियों की पुनरावृत्ति के साथ नहीं हुआ।</div>
+                    <div class="options"><label><input type="radio" name="q7A" value="Yes"> हां / Yes</label><label><input type="radio" name="q7A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc7A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. सत्संग का समापन सकारात्मक रूप से और एक प्रभावशाली पंच लाइन के साथ हुआ।</div>
+                    <div class="options"><label><input type="radio" name="q7B" value="Yes"> हां / Yes</label><label><input type="radio" name="q7B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc7B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. समापन ने बच्चों को दिशा प्रदान की और उन्हें यह विश्वास दिलाया कि वे भी इसे कर सकते हैं।</div>
+                    <div class="options"><label><input type="radio" name="q7C" value="Yes"> हां / Yes</label><label><input type="radio" name="q7C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc7C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. समापन काल्पनिक कहानी जैसा नहीं था, बल्कि इतना यथार्थपूर्ण था कि बच्चे उससे कुछ सीख सकें।</div>
+                    <div class="options"><label><input type="radio" name="q7D" value="Yes"> हां / Yes</label><label><input type="radio" name="q7D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc7D" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">E. विषय से संबंधित एक पंच लाइन का प्रयोग किया गया, जिसे बच्चे अपने साथ सीख के रूप में ले जा सकें।</div>
+                    <div class="options"><label><input type="radio" name="q7E" value="Yes"> हां / Yes</label><label><input type="radio" name="q7E" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc7E" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <div class="section-title">8. सामान्य अनुदेश (General Instructions)</div>
+                <div class="question-block">
+                    <div class="question-text">A. प्रत्येक वाक्य की संरचना व्याकरण की दृष्टि से सही पाई गई, और किसी भी प्रकार के अपशब्द या अपमानजनक भाषा का उपयोग नहीं किया गया।</div>
+                    <div class="options"><label><input type="radio" name="q8A" value="Yes"> हां / Yes</label><label><input type="radio" name="q8A" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8A" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">B. बाल सत्संग कर्ता द्वारा अपने लिए 'मैं', 'मुझे', या 'मेरा' जैसे शब्दों का प्रयोग नहीं किया गया।</div>
+                    <div class="options"><label><input type="radio" name="q8B" value="Yes"> हां / Yes</label><label><input type="radio" name="q8B" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8B" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">C. सत्संग सकारात्मक पाया गया। किसी बात को समझाने के लिए नकारात्मक उदाहरण या शब्दों का प्रयोग नहीं किया गया।</div>
+                    <div class="options"><label><input type="radio" name="q8C" value="Yes"> हां / Yes</label><label><input type="radio" name="q8C" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8C" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">D. बच्चों को केवल आदेश देने के बजाय, यह समझाने की कोशिश की गई कि कुछ बातें क्यों करनी चाहिए और कुछ क्यों नहीं करनी चाहिए।</div>
+                    <div class="options"><label><input type="radio" name="q8D" value="Yes"> हां / Yes</label><label><input type="radio" name="q8D" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8D" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">E. बातें कहने में सावधानी रखी गई और कोई भी बात बहुत सामान्य रूप में नहीं कही गई।</div>
+                    <div class="options"><label><input type="radio" name="q8E" value="Yes"> हां / Yes</label><label><input type="radio" name="q8E" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8E" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">F. आजकल के बच्चे बहुत तेज, समझदार और विश्लेषणात्मक होते हैं। इसलिए, ऐसी कहानियाँ, उदाहरण या घटनाएँ चुनी गईं जो उनकी सोच और आधुनिक मानसिकता से मेल खाती हों।</div>
+                    <div class="options"><label><input type="radio" name="q8F" value="Yes"> हां / Yes</label><label><input type="radio" name="q8F" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8F" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">G. बाल सत्संग स्क्रिप्ट की योजना सामान्य बच्चों को ध्यान में रखकर बनाई गई।</div>
+                    <div class="options"><label><input type="radio" name="q8G" value="Yes"> हां / Yes</label><label><input type="radio" name="q8G" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8G" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">H. बाल सत्संग स्क्रिप्ट में मिश्रित भाषा का प्रयोग केवल उन्हीं दूसरी भाषा के शब्दों तक सीमित पाया गया, जो आसानी से समझ में आने वाले और सामान्य रूप से स्वीकृत थे।</div>
+                    <div class="options"><label><input type="radio" name="q8H" value="Yes"> हां / Yes</label><label><input type="radio" name="q8H" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8H" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">I. अपशब्दों का प्रयोग नहीं किया गया, क्योंकि इससे बच्चों के मन में भ्रम उत्पन्न हो सकता है।</div>
+                    <div class="options"><label><input type="radio" name="q8I" value="Yes"> हां / Yes</label><label><input type="radio" name="q8I" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8I" placeholder="संक्षिप्त विवरण">
+                </div>
+                <div class="question-block">
+                    <div class="question-text">J. स्क्रिप्ट में मौद्रिक शब्दों, ब्रांड नामों या किसी व्यक्ति की सामाजिक/आर्थिक स्थिति को दर्शाने वाले शब्द का प्रयोग नहीं किया गया।</div>
+                    <div class="options"><label><input type="radio" name="q8J" value="Yes"> हां / Yes</label><label><input type="radio" name="q8J" value="No"> नहीं / No</label></div>
+                    <input type="text" name="desc8J" placeholder="संक्षिप्त विवरण">
+                </div>
+
+                <button type="button" class="btn" style="background-color: #28a745;" onclick="submitScriptForm()">Submit Script Approval</button>
+            </form>
+        </div>
+
     </div>
 
     <script>
-        // Exactly as requested: This logic listens to the VIEW dropdown. 
-        // If "MOBILE" is selected, it applies the 'mobile-view' CSS class which shrinks the container to mobile size. 
-        // Otherwise, it stays in the default 'desktop-view'.
+        var activeUserEmail = "<?= Session.getActiveUser().getEmail() ?>"; 
+        var adminEmail = "YOUR_ADMIN_EMAIL@GMAIL.COM"; 
+
         function toggleView() {
             var selectedView = document.getElementById("viewSelect").value;
             var container = document.getElementById("mainContainer");
-            
             if (selectedView === "mobile") {
                 container.className = "mobile-view";
             } else {
                 container.className = "desktop-view";
             }
         }
-    </script>
 
+        function checkRole() {
+            var role = document.getElementById("roleSelect").value;
+            var passwordGroup = document.getElementById("passwordGroup");
+            
+            if (role === "ADMIN" && activeUserEmail === adminEmail) {
+                passwordGroup.classList.add("hidden");
+            } else if (role !== "") {
+                passwordGroup.classList.remove("hidden");
+            } else {
+                passwordGroup.classList.add("hidden");
+            }
+        }
+
+        function login() {
+            var role = document.getElementById("roleSelect").value;
+            var pwd = document.getElementById("passwordInput").value;
+            var stateSelect = document.getElementById("stateSelect");
+
+            if(role === "") {
+                alert("Please select a role.");
+                return;
+            }
+
+            var isAuthenticated = false;
+
+            if (role === "ADMIN" && activeUserEmail === adminEmail) {
+                isAuthenticated = true;
+            } else if (pwd === "mukesh2709") {
+                isAuthenticated = true;
+            } else if (pwd.length > 3) {
+                isAuthenticated = true;
+                var stateCode = pwd.substring(0, 2).toUpperCase();
+                if(stateCode === "MP" || stateCode === "CG" || stateCode === "RJ" || stateCode === "OD") {
+                    stateSelect.value = stateCode;
+                    stateSelect.disabled = true;
+                }
+            } else {
+                alert("Incorrect Password.");
+                return;
+            }
+
+            if(isAuthenticated) {
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("hierarchySection").classList.remove("hidden");
+                document.getElementById("formsSection").classList.remove("hidden");
+
+                var sci2 = document.getElementById("sci2FormContainer");
+                var scriptApp = document.getElementById("scriptApprovalContainer");
+
+                if(role === "ADMIN" || role === "ZS" || role === "SSO" || role === "AIBS") {
+                    sci2.classList.remove("hidden");
+                }
+                
+                if(role === "ADMIN" || role === "ZS" || role === "ABSKCO") {
+                    scriptApp.classList.remove("hidden");
+                }
+            }
+        }
+
+        function submitSci2Form() {
+            var form = document.getElementById("sci2Form");
+            var formData = new FormData(form);
+            var data = new URLSearchParams(formData);
+
+            fetch("https://script.google.com/macros/s/AKfycbwkTAMMfiSZbSr0uLj8xWZo63xGp4OGLtu2b5RKDx8fyvS7mOuUGkcHEYFtby2FPtBO/exec", {
+                method: "POST",
+                body: data
+            }).then(response => {
+                alert("SCI-2 Data submitted to Google Sheets successfully!");
+                form.reset();
+            }).catch(error => {
+                alert("Error submitting form.");
+            });
+        }
+
+        function submitScriptForm() {
+            var form = document.getElementById("checklistForm");
+            var formData = new FormData(form);
+            var data = new URLSearchParams(formData);
+
+            fetch("https://script.google.com/macros/s/AKfycbwkTAMMfiSZbSr0uLj8xWZo63xGp4OGLtu2b5RKDx8fyvS7mOuUGkcHEYFtby2FPtBO/exec", {
+                method: "POST",
+                body: data
+            }).then(response => {
+                alert("Script Approval submitted to Google Sheets successfully!");
+                form.reset();
+            }).catch(error => {
+                alert("Error submitting form.");
+            });
+        }
+    </script>
 </body>
 </html>
